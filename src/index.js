@@ -5,6 +5,8 @@ import { getRefs } from './js/refs';
 import { renderMarkup } from './js/renderMarkup';
 import { fetchImages } from './js/fetchImages';
 import { noMorePages } from './js/service';
+import throttle from 'lodash.throttle';
+// import { infScroll } from './js/scroll';
 
 const { formElement, galleryElement, btnElement, textElement } = getRefs();
 
@@ -75,3 +77,25 @@ async function onClickMoreImg() {
 }
 
 export { perPage, page, nameImg };
+
+// My infinite scroll --test
+
+window.addEventListener('scroll', throttle(onScrollWindow, 500));
+async function onScrollWindow() {
+  const documentRect = document.documentElement.getBoundingClientRect();
+  const heightBeforeLoading = 300;
+  if (
+    documentRect.bottom <
+    document.documentElement.clientHeight + heightBeforeLoading
+  ) {
+    currentPage += 1;
+    const response = await fetchImages(searchQuery, currentPage);
+    renderMarkup(response.hits);
+    lightbox.refresh();
+    currentHits += response.hits.length;
+
+    if (currentHits === response.totalHits) {
+      textInAnEnd.classList.remove('hidden');
+    }
+  }
+}
