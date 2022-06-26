@@ -95,7 +95,7 @@ async function onScrollWindow() {
     currentHits += response.hits.length;
 
     if (currentHits === response.totalHits) {
-      textInAnEnd.classList.remove('hidden');
+      textElement.classList.remove('hidden');
     }
   }
 }
