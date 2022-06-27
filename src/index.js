@@ -5,8 +5,7 @@ import { getRefs } from './js/refs';
 import { renderMarkup } from './js/renderMarkup';
 import { fetchImages } from './js/fetchImages';
 import { noMorePages } from './js/service';
-import throttle from 'lodash.throttle';
-// import { infScroll } from './js/scroll';
+import { onScroll, onToTopBtn } from './js/lift';
 
 const { formElement, galleryElement, btnElement, textElement } = getRefs();
 
@@ -33,6 +32,7 @@ btnElement.addEventListener('click', onClickMoreImg);
 
 async function getGallery(event) {
   event.preventDefault();
+  window.scrollTo({ top: 0 });
   galleryElement.innerHTML = '';
   nameImg = event.currentTarget.elements.searchQuery.value.toLowerCase();
   if (!nameImg) return;
@@ -78,24 +78,11 @@ async function onClickMoreImg() {
 
 export { perPage, page, nameImg };
 
-// My infinite scroll --test
+// const { height: cardHeight } = document
+//   .querySelector('.gallery')
+//   .firstElementChild.getBoundingClientRect();
 
-window.addEventListener('scroll', throttle(onScrollWindow, 500));
-async function onScrollWindow() {
-  const documentRect = document.documentElement.getBoundingClientRect();
-  const heightBeforeLoading = 300;
-  if (
-    documentRect.bottom <
-    document.documentElement.clientHeight + heightBeforeLoading
-  ) {
-    currentPage += 1;
-    const response = await fetchImages(searchQuery, currentPage);
-    renderMarkup(response.hits);
-    lightbox.refresh();
-    currentHits += response.hits.length;
-
-    if (currentHits === response.totalHits) {
-      textElement.classList.remove('hidden');
-    }
-  }
-}
+// window.scrollBy({
+//   top: cardHeight * 0,
+//   behavior: 'smooth',
+// });
