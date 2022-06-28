@@ -78,6 +78,26 @@ async function onClickMoreImg() {
 
 export { perPage, page, nameImg };
 
+const options = {
+  rootMargin: '100px',
+  threshold: 1.0,
+};
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Делаем HTTP-запрос
+      getGallery();
+
+      // Добавляем разметку
+      // renderMarkup();
+      console.log('line');
+    }
+  });
+}, options);
+
+observer.observe(document.querySelector('.scroll-guard'));
+
 // const { height: cardHeight } = document
 //   .querySelector('.gallery')
 //   .firstElementChild.getBoundingClientRect();
