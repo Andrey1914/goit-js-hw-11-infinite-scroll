@@ -25,10 +25,10 @@ const Lightbox = new SimpleLightbox('.gallery a', {
   doubleTapZoom: 1.5,
 });
 
-btnElement.classList.add('hidden');
-console.log(formElement);
+// btnElement.classList.add('hidden');
+// console.log(formElement);
 formElement.addEventListener('submit', getGallery);
-btnElement.addEventListener('click', onClickMoreImg);
+// btnElement.addEventListener('click', onClickMoreImg);
 
 async function getGallery(event) {
   event.preventDefault();
@@ -40,7 +40,7 @@ async function getGallery(event) {
   try {
     const img = await fetchImages(nameImg);
     const imgData = img.data;
-    console.log(imgData);
+    // console.log(imgData);
     if (!imgData.total) {
       return Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
@@ -52,12 +52,13 @@ async function getGallery(event) {
     Notify.success(`Hooray! We found ${imgData.totalHits} images.`);
     renderMarkup(imgData.hits);
 
-    btnElement.classList.remove('hidden');
+    // btnElement.classList.remove('hidden');
     noMorePages(imgData);
 
     Lightbox.refresh();
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
+    console.log(error);
   }
 }
 
@@ -79,7 +80,7 @@ async function onClickMoreImg() {
 export { perPage, page, nameImg };
 
 const options = {
-  rootMargin: '100px',
+  rootMargin: '300px',
   threshold: 1.0,
 };
 
@@ -87,22 +88,13 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       // Делаем HTTP-запрос
-      getGallery();
+      fetchImages();
 
       // Добавляем разметку
-      // renderMarkup();
-      console.log('line');
+      onClickMoreImg();
+      // console.log('line');
     }
   });
 }, options);
 
 observer.observe(document.querySelector('.scroll-guard'));
-
-// const { height: cardHeight } = document
-//   .querySelector('.gallery')
-//   .firstElementChild.getBoundingClientRect();
-
-// window.scrollBy({
-//   top: cardHeight * 0,
-//   behavior: 'smooth',
-// });
